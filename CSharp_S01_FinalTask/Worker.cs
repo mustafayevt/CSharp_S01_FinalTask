@@ -8,6 +8,11 @@ namespace CSharp_S01_FinalTask
 {
     class Worker:User
     {
+        public Worker(User user)
+            :base(user)
+        {
+
+        }
         WorkerAnnouncement wAnnouncement = null;
     }
     class WorkerAnnouncement

@@ -67,58 +67,11 @@ namespace CSharp_S01_FinalTask
                             Thread.Sleep(30);
                         }
                         Console.Clear();
-                        UsernamePoint:
-                        Console.WriteLine("Enter Username");
-                        string username = Console.ReadLine();
-                        if(CheckUsername(username, employers, workers))
-                        {
-                            Console.WriteLine("This Username Already Taken");
-                            goto UsernamePoint;
-                        }
-                    EmailPoint:
-                        Console.WriteLine("Enter Email:");
-                        string mail = Console.ReadLine();
-                        if (!User.IsEmail(mail))
-                        {
-                            Console.WriteLine("Email Is Invalid!");
-                            goto EmailPoint;
-                        }
-                        if (CheckEmail(mail, employers, workers))
-                        {
-                            Console.WriteLine("This Email Used by Another User");
-                            goto EmailPoint;
-                        }
-                    ChoicePoint:
-                        Console.WriteLine("Worker - 1, Employer - 2");
-                        string ChoicePro = Console.ReadLine();
-                        if (ChoicePro != "1" && ChoicePro != "2")
-                        {
-                            Console.WriteLine("Wrong Choice");
-                            goto ChoicePoint;
-                        }
-                    PasswordPoint:
-                        Console.WriteLine("Enter Password");
-                        string password = Console.ReadLine();
-                        if (!User.IsPassword(password))
-                        {
-                            Console.WriteLine("Password Is Invalid!");
-                            goto PasswordPoint;
-                        }
-                        Console.WriteLine("Enter Password Again");
-                        if (Console.ReadLine() != password)
-                        {
-                            Console.WriteLine("Wrong Password");
-                            goto PasswordPoint;
-                        }
-                    CAPTCHAPoint:
-                        string CAPTCHA = GenerateCoupon(4);
-                        Console.WriteLine($"Enter this CAPTCHA: {CAPTCHA}");
-                        if (CAPTCHA != Console.ReadLine())
-                        {
-                            Console.WriteLine("Wrong CAPTCHA");
-                            goto CAPTCHAPoint;
-                        }
-
+                        User tmp = User.Register(employers, workers);
+                        if (tmp.RegisterAs == RegisterAs.WORKER)
+                            workers.Add(new Worker(tmp));
+                        else employers.Add(new Employer(tmp));
+                        Console.WriteLine("Sign Up is Successful");
                         break;
                     }
                 case 0:
@@ -162,30 +115,6 @@ namespace CSharp_S01_FinalTask
                 Console.Write("   ");
             }
         }
-
         
-        public static string GenerateCoupon(int length)
-        {
-            string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-            StringBuilder result = new StringBuilder(length);
-        again:
-            Random random = new Random();
-            for (int i = 0; i < length; i++)
-            {
-                result.Append(characters[random.Next(characters.Length)]);
-            }
-            if (!Regex.IsMatch(result.ToString(), @"^[a-zA-Z0-9]+$")) goto again;
-            return result.ToString();
-        }
-
-        static bool CheckUsername(string uname, List<Employer> employers, List<Worker>workers)
-        {
-            return employers.Exists(x => x.Username == uname) || workers.Exists(x => x.Username == uname);
-        }
-
-        static bool CheckEmail(string email, List<Employer> employers, List<Worker> workers)
-        {
-            return employers.Exists(x => x.Email == email) || workers.Exists(x => x.Email == email);
-        }
     }
 }

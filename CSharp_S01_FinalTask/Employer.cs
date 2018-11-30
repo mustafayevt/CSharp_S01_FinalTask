@@ -8,6 +8,11 @@ namespace CSharp_S01_FinalTask
 {
     class Employer : User
     {
+        public Employer(User user)
+            :base(user)
+        {
+
+        }
         List<EmployerAnnouncement> eAnnouncements = new List<EmployerAnnouncement>();
     }
     class EmployerAnnouncement
