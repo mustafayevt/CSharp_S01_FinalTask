@@ -18,11 +18,12 @@ namespace CSharp_S01_FinalTask
             {
                 Console.SetWindowSize(i + 80, i);
 
-                Thread.Sleep(20);
+                Thread.Sleep(40);
             }
             List<Employer> employers = new List<Employer>();
             List<Worker> workers = new List<Worker>();
-            uint LoggedIn;
+            int LoggedAs = 0;
+            int Logged = 0;
         MainPoint:
             AnimatedTitle("Main Page");
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -68,11 +69,23 @@ namespace CSharp_S01_FinalTask
                         Console.Clear();
                         User tmp = User.Register(employers, workers);
                         if (tmp.RegisterAs == RegisterAs.WORKER)
+                        {
                             workers.Add(new Worker(tmp));
-                        else employers.Add(new Employer(tmp));
-                        LoggedIn = User.ID;
+                            Logged = workers.Last().GetHashCode();
+                            LoggedAs = 1;
+                        }
+                        else
+                        {
+                            employers.Add(new Employer(tmp));
+                            Logged = employers.Last().GetHashCode();
+                            LoggedAs = 2;
+                        }
                         Console.WriteLine("Sign Up is Successful");
                         Console.ReadKey();
+                        if (LoggedAs == 1)
+                            ShowLoggedInMenuForWorker(employers,workers, Logged);
+                        //else if (LoggedAs == 2)
+                            //ShowLoggedInMenuForEmployer(employers, Logged);
                         break;
                     }
                 case 0:
@@ -86,6 +99,7 @@ namespace CSharp_S01_FinalTask
                     Console.ReadKey();
                     break;
             }
+            goto MainPoint;
 
         }
 
@@ -102,7 +116,7 @@ namespace CSharp_S01_FinalTask
 
         }
 
-        
+
         static void ShowChoices(int current, string[] choices)
         {
             for (int i = 0; i < choices.Length; i++)
@@ -116,11 +130,68 @@ namespace CSharp_S01_FinalTask
                 Console.Write("   ");
             }
         }
-        
-        static void ShowLoggedInMenu()
+
+        static void ShowLoggedInMenuForWorker(List<Employer> employers, List<Worker> workers, int logged)
         {
-
+        ReturnMain:
+            string[] Choices = { "Add CV", "Find Job", "Search", "Show My Info", "Show All Jobs", "Log Out" };
+            int currentChoice = 0;
+            ConsoleKeyInfo info;
+            while (true)
+            {
+                Console.Clear();
+                ShowChoices(currentChoice, Choices);
+                info = Console.ReadKey();
+                if (info.Key == ConsoleKey.Enter) break;
+                if (info.Key == ConsoleKey.RightArrow)
+                {
+                    if (currentChoice < 5) currentChoice++;
+                }
+                if (info.Key == ConsoleKey.LeftArrow)
+                {
+                    if (currentChoice > 0) currentChoice--;
+                }
+            }
+            switch (currentChoice)
+            {
+                case 0:
+                    {
+                        if (workers.Find(x => x.GetHashCode() == logged).wAnnouncement == null)
+                        {
+                            workers.Find(x => x.GetHashCode() == logged).wAnnouncement = Worker.AddCV();
+                        }
+                        else
+                        {
+                            Console.WriteLine("You Already Added CV");
+                            goto ReturnMain;
+                        }
+                        break;
+                    }
+                case 1:
+                    {
+                        //if(workers.Find(x=>x.GetHashCode()==logged).wAnnouncement)
+                        break;
+                    }
+                default:
+                    break;
+            }
         }
-
+        static void SearchJob(List<Employer>employers, List<Worker> workers,int logged)
+        {
+            foreach (var item in workers)
+            {
+                if (item.GetHashCode() == logged)
+                {
+                    var tmp = employers.Where(x => x.eAnnouncements.Any(s => s.Age == item.wAnnouncement.Age || s.Category == item.wAnnouncement.Category || s.City == item.wAnnouncement.City || s.Education == item.wAnnouncement.Education || s.Experience == item.wAnnouncement.Experience || s.Salary == item.wAnnouncement.MinSalarey));
+                    foreach (var item1 in tmp)
+                    {
+                        foreach (var item2 in item1.eAnnouncements)
+                        {
+                            item2.Show();
+                        }
+                    }
+                }
+            }
+        }
     }
 }

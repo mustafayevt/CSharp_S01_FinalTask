@@ -13,7 +13,7 @@ namespace CSharp_S01_FinalTask
         {
 
         }
-        WorkerAnnouncement wAnnouncement = null;
+        public WorkerAnnouncement wAnnouncement = null;
         public static WorkerAnnouncement AddCV()
         {
             WorkerAnnouncement newAnnouncement = new WorkerAnnouncement();
