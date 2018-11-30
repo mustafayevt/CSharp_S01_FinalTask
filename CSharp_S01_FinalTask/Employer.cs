@@ -14,12 +14,13 @@ namespace CSharp_S01_FinalTask
 
         }
         List<EmployerAnnouncement> eAnnouncements = new List<EmployerAnnouncement>();
+        
     }
     class EmployerAnnouncement
     {
         public string AnnouncementName { get; set; }
         public string CompanyName { get; set; }
-        public string Category { get; set; }
+        public Category Category { get; set; }
         public string Description { get; set; }
         public City City { get; set; }
         public decimal Salary { get; set; }

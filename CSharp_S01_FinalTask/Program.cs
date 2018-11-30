@@ -18,10 +18,11 @@ namespace CSharp_S01_FinalTask
             {
                 Console.SetWindowSize(i + 80, i);
 
-                Thread.Sleep(30);
+                Thread.Sleep(20);
             }
             List<Employer> employers = new List<Employer>();
             List<Worker> workers = new List<Worker>();
+            uint LoggedIn;
         MainPoint:
             AnimatedTitle("Main Page");
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -54,7 +55,6 @@ namespace CSharp_S01_FinalTask
                             Console.Beep();
                             Console.WriteLine("Caps Lock is active!");
                         }
-
                         break;
                     }
                 case 2:
@@ -64,7 +64,6 @@ namespace CSharp_S01_FinalTask
                         {
                             Console.Beep();
                             Console.WriteLine("Caps Lock is active!");
-                            Thread.Sleep(30);
                         }
                         Console.Clear();
                         User tmp = User.Register(employers, workers);
@@ -72,6 +71,8 @@ namespace CSharp_S01_FinalTask
                             workers.Add(new Worker(tmp));
                         else employers.Add(new Employer(tmp));
                         Console.WriteLine("Sign Up is Successful");
+                        LoggedIn = User.ID;
+                        goto MainPoint;
                         break;
                     }
                 case 0:

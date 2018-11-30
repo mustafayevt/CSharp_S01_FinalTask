@@ -9,11 +9,11 @@ namespace CSharp_S01_FinalTask
 {
     class User
     {
+        public static uint ID { get; set; } = 0;
         public string Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public RegisterAs RegisterAs { get; set; }
-        public Regex pNumberPattern = new Regex(@"^[50|51|55|70|77]{2}[0-9]{7}$");
 
         public User(User tmp)
         {
@@ -21,6 +21,7 @@ namespace CSharp_S01_FinalTask
             Email = tmp.Email;
             Password = tmp.Password;
             RegisterAs = tmp.RegisterAs;
+            ID++;
         }
 
         public User()
@@ -43,6 +44,12 @@ namespace CSharp_S01_FinalTask
         {
             string PasswordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$";
             return Regex.IsMatch(password, PasswordPattern);
+        }
+
+        public static bool IsNumber(string num)
+        {
+            string pNumberPattern = @"^[50|51|55|70|77]{2}[0-9]{7}$";
+            return Regex.IsMatch(num, pNumberPattern);
         }
 
         public static User Register(List<Employer>employers, List<Worker> workers)
@@ -111,6 +118,7 @@ namespace CSharp_S01_FinalTask
         {
             return employers.Exists(x => x.Email == email) || workers.Exists(x => x.Email == email);
         }
+
 
         public static string GenerateCoupon(int length)
         {
