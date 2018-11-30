@@ -14,7 +14,7 @@ namespace CSharp_S01_FinalTask
 
         }
         WorkerAnnouncement wAnnouncement = null;
-        public static void AddCV()
+        public static WorkerAnnouncement AddCV()
         {
             WorkerAnnouncement newAnnouncement = new WorkerAnnouncement();
             Console.WriteLine("Enter Name");
@@ -115,6 +115,7 @@ namespace CSharp_S01_FinalTask
                 goto pNumberPoint;
             }
             newAnnouncement.pNumber = num;
+            return newAnnouncement;
         }
     }
     class WorkerAnnouncement

@@ -70,9 +70,9 @@ namespace CSharp_S01_FinalTask
                         if (tmp.RegisterAs == RegisterAs.WORKER)
                             workers.Add(new Worker(tmp));
                         else employers.Add(new Employer(tmp));
-                        Console.WriteLine("Sign Up is Successful");
                         LoggedIn = User.ID;
-                        goto MainPoint;
+                        Console.WriteLine("Sign Up is Successful");
+                        Console.ReadKey();
                         break;
                     }
                 case 0:
@@ -117,5 +117,10 @@ namespace CSharp_S01_FinalTask
             }
         }
         
+        static void ShowLoggedInMenu()
+        {
+
+        }
+
     }
 }
