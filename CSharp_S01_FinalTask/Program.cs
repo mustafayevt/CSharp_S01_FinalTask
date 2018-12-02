@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -21,9 +23,39 @@ namespace CSharp_S01_FinalTask
                 Thread.Sleep(40);
             }
             List<Employer> employers = new List<Employer>();
-            employers.Add(new Employer(new User()));
-            employers.Last().eAnnouncements.Add(new EmployerAnnouncement() { Education = Education.HIGER });
             List<Worker> workers = new List<Worker>();
+            if (File.Exists("Employers.json") && File.Exists("Workers.json"))
+            {
+                string jsonEmployers = File.ReadAllText("Employers.json");
+                employers = JsonConvert.DeserializeObject<List<Employer>>(jsonEmployers);
+                if (employers != null)
+                {
+                    foreach (var item in employers)
+                    {
+                        foreach (var item2 in item.eAnnouncements)
+                        {
+                            if (item2 != null)
+                            {
+                                EmployerAnnouncement.id = item2.Announcment_ID;
+                            }
+                        }
+                    }
+                }
+                
+                string jsonWorkers = File.ReadAllText("Workers.json");
+                workers = JsonConvert.DeserializeObject<List<Worker>>(jsonWorkers);
+                if (workers != null)
+                {
+                    foreach (var item in workers)
+                    {
+                        if(item.wAnnouncement!= null)
+                        {
+                            WorkerAnnouncement.id = item.wAnnouncement.CV_ID;
+                        }
+                    }
+                }
+            }
+            //Console.WriteLine(workers[0].Username);
             int LoggedAs = 0;
             int Logged = 0;
         MainPoint:
@@ -64,7 +96,7 @@ namespace CSharp_S01_FinalTask
                         var pass = Console.ReadLine();
                         foreach (var item in workers)
                         {
-                            if(item.Username==uname && item.Password == pass)
+                            if (item.Username == uname && item.Password == pass)
                             {
                                 LoggedAs = 1;
                                 Logged = item.GetHashCode();
@@ -76,6 +108,22 @@ namespace CSharp_S01_FinalTask
                                 }
                             }
                         }
+                        foreach (var item in employers)
+                        {
+                            if (item.Username == uname && item.Password == pass)
+                            {
+                                LoggedAs = 2;
+                                Logged = item.GetHashCode();
+                                if (!ShowLoggedInMenuForEmployer(employers, workers, Logged))
+                                {
+                                    Logged = 0;
+                                    LoggedAs = 0;
+                                    goto MainPoint;
+                                }
+                            }
+                        }
+                        Console.WriteLine("Not User Found, press any key for return main menu");
+                        Console.ReadKey();
                         break;
                     }
                 case 2:
@@ -103,18 +151,34 @@ namespace CSharp_S01_FinalTask
                         Console.WriteLine("Sign Up is Successful");
                         Console.ReadKey();
                         if (LoggedAs == 1)
-                            if(!ShowLoggedInMenuForWorker(employers,workers, Logged))
+                        {
+
+                            if (!ShowLoggedInMenuForWorker(employers, workers, Logged))
                             {
                                 Logged = 0;
                                 LoggedAs = 0;
                                 goto MainPoint;
                             }
-                        //else if (LoggedAs == 2)
-                            //ShowLoggedInMenuForEmployer(employers, Logged);
+                        }
+                        else if (LoggedAs == 2)
+                            if (!ShowLoggedInMenuForEmployer(employers, workers, Logged))
+                            {
+                                Logged = 0;
+                                LoggedAs = 0;
+                                goto MainPoint;
+                            }
                         break;
                     }
                 case 0:
                     {
+                        string jsonEmployer = JsonConvert.SerializeObject(employers);
+
+                        //write string to file
+                        System.IO.File.WriteAllText("Employers.json", jsonEmployer);
+
+                        string jsonWorker = JsonConvert.SerializeObject(workers);
+
+                        System.IO.File.WriteAllText("Workers.json", jsonWorker);
                         AnimatedTitle("Bye Bye");
                         Environment.Exit(0);
                         break;
@@ -206,7 +270,9 @@ namespace CSharp_S01_FinalTask
                                 {
                                     foreach (var item2 in item1.eAnnouncements)
                                     {
+                                        Console.WriteLine("----------------------");
                                         item2.Show();
+                                        Console.WriteLine("----------------------");
                                     }
                                 }
                             }
@@ -299,9 +365,9 @@ Search for:
                     {
                         foreach (var item in workers)
                         {
-                            if (item.GetHashCode() == logged && item.wAnnouncement!=null)
+                            if (item.GetHashCode() == logged && item.wAnnouncement != null)
                             {
-                                item.Show();goto ReturnMain;
+                                item.Show(); goto ReturnMain;
                             }
                         }
                         Console.WriteLine("Not Found Any CV");
@@ -310,12 +376,13 @@ Search for:
                 case 4:
                     {
                     returnJobs:
-                        var tmp = employers.SelectMany(x=>x.eAnnouncements).ToList();
-                        if (tmp.Count > 0)
+                        var tmp = employers.SelectMany(x => x.eAnnouncements).ToList();
+                        if (tmp.Count != 0)
                         {
-                            for (int i = 0; i < tmp.Count; i++)
+                            int i =1;
+                            foreach (var item in tmp)
                             {
-                                Console.WriteLine($"{i + 1} - {tmp[i]}");
+                                Console.WriteLine($"{i++} - {item.AnnouncementName}");
                             }
                         }
                         else
@@ -324,13 +391,24 @@ Search for:
                             goto ReturnMain;
                         }
                         int select = Convert.ToInt32(Console.ReadLine());
-                        if (select > tmp.Count) goto returnJobs;
+                        select--;
+                        if (select >= tmp.Count)
+                        {
+                            Console.WriteLine("Out of Range");
+                            goto returnJobs;
+                        }
                         tmp[select].Show();
                         Console.WriteLine("--------------------------------");
-                        Console.WriteLine("Send CV For This Job y\n");
+                        Console.WriteLine("Send CV For This Job y/n");
                         var sendJob = Console.ReadLine();
                         if (sendJob.ToLower() == "y")
                         {
+                            var cvID = workers.Find(x => x.GetHashCode() == logged).wAnnouncement.CV_ID;
+                            uint eCvID=0;
+                            foreach (var item in employers)
+                            {
+                                eCvID = item.eAnnouncements.Find(x => x.Announcment_ID == tmp[select].Announcment_ID).Announcment_ID;
+                            }
                             foreach (var item in workers)
                             {
                                 if (item.GetHashCode() == logged)
@@ -341,13 +419,14 @@ Search for:
                                         {
                                             if (item3.Announcment_ID == tmp[select].Announcment_ID)
                                             {
-                                                item2.Coming.Add(item3.Announcment_ID,item.wAnnouncement.CV_ID);
+                                                item2.Coming.Add(new Dictionary<uint, uint>() { { item3.Announcment_ID, item.wAnnouncement.CV_ID } });
                                             }
                                         }
                                     }
                                 }
                             }
-                        goto ReturnMain;
+                            Console.WriteLine("Sended!");
+                            goto ReturnMain;
                         }
                         else goto returnJobs;
                     }
@@ -360,9 +439,76 @@ Search for:
             }
             return false;
         }
-        static bool ShowLoggedInMenuForEmployer(List<Employer> employers,List<Worker> workers, int logged)
+        static bool ShowLoggedInMenuForEmployer(List<Employer> employers, List<Worker> workers, int logged)
         {
-
+        ReturnMain:
+            Console.ReadKey();
+            string[] Choices = { "Add CV", "Work Applications", "Log Out" };
+            int currentChoice = 0;
+            ConsoleKeyInfo info;
+            while (true)
+            {
+                Console.Clear();
+                ShowChoices(currentChoice, Choices);
+                info = Console.ReadKey();
+                if (info.Key == ConsoleKey.Enter) break;
+                if (info.Key == ConsoleKey.RightArrow)
+                {
+                    if (currentChoice < 2) currentChoice++;
+                }
+                if (info.Key == ConsoleKey.LeftArrow)
+                {
+                    if (currentChoice > 0) currentChoice--;
+                }
+            }
+            switch (currentChoice)
+            {
+                case 0:
+                    {
+                        employers.Find(x => x.GetHashCode() == logged).eAnnouncements.Add(Employer.addAnnouncement());
+                        goto ReturnMain;
+                    }
+                case 1:
+                    {
+                        bool checkExist = false;
+                        foreach (var item in employers.Find(x => x.GetHashCode() == logged).Coming)
+                        {
+                            foreach (var key in item)
+                            {
+                                foreach (var item2 in employers.Find(x => x.GetHashCode() == logged).eAnnouncements)
+                                {
+                                    if (key.Key == item2.Announcment_ID)
+                                    {
+                                        var tmp = workers.Find(s => s.wAnnouncement.CV_ID == key.Value).wAnnouncement;
+                                        Console.WriteLine("-----------------------------");
+                                        Console.WriteLine($@"Announcement:");
+                                        item2.Show();
+                                        //Console.WriteLine("-----------------------------");
+                                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                                        Console.WriteLine("\nWorker:\n");
+                                        Console.BackgroundColor = ConsoleColor.Black;
+                                        tmp.Show();
+                                        Console.WriteLine("-----------------------------");
+                                        checkExist = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (!checkExist)
+                        {
+                            Console.WriteLine("Empty");
+                            Console.ReadKey();
+                        }
+                        goto ReturnMain;
+                    }
+                case 2:
+                    {
+                        return false;
+                    }
+                default:
+                    break;
+            }
+            Console.Clear();
             return false;
         }
     }

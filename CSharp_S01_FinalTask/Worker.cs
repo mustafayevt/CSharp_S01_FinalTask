@@ -13,6 +13,10 @@ namespace CSharp_S01_FinalTask
         {
 
         }
+        public Worker()
+        {
+
+        }
         public WorkerAnnouncement wAnnouncement = null;
 
         public void Show()
@@ -74,7 +78,7 @@ Phone Number - {wAnnouncement.pNumber}");
                 Console.WriteLine("Wrong Choice, Enter Again");
                 goto EducationPoint;
             }
-            if (edu > 4 || edu < 1)
+            if (exp > 4 || exp < 1)
             {
                 Console.WriteLine("Wrong Choice, Enter Again");
                 goto ExperiencePoint;
@@ -92,7 +96,7 @@ Phone Number - {wAnnouncement.pNumber}");
                 Console.WriteLine("Wrong Choice, Enter Again");
                 goto CategoryPoint;
             }
-            if (edu > 4 || edu < 1)
+            if (catg > 4 || catg < 1)
             {
                 Console.WriteLine("Wrong Choice, Enter Again");
                 goto CategoryPoint;
@@ -108,7 +112,7 @@ Phone Number - {wAnnouncement.pNumber}");
                 Console.WriteLine("Wrong Choice, Enter Again");
                 goto CityPoint;
             }
-            if (edu > 3 || edu < 1)
+            if (city > 3 || city < 1)
             {
                 Console.WriteLine("Wrong Choice, Enter Again");
                 goto CityPoint;
@@ -148,5 +152,19 @@ Phone Number - {wAnnouncement.pNumber}");
         public Category Category { get; set; }
         public decimal MinSalarey { get; set; }
         public string pNumber { get; set; }
+        public void Show()
+        {
+            Console.WriteLine(Name);
+            Console.WriteLine(Surname);
+            Console.WriteLine($"{Age}");
+            Console.WriteLine(Category.ToString());
+            Console.WriteLine(City.ToString());
+            Console.WriteLine(Sex.ToString());
+            Console.WriteLine(Education.ToString());
+            Console.WriteLine(Experience.ToString());
+            Console.WriteLine(MinSalarey);
+            Console.WriteLine(pNumber);
+
+        }
     }
 }

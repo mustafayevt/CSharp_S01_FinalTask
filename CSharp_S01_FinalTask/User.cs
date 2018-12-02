@@ -9,7 +9,6 @@ namespace CSharp_S01_FinalTask
 {
     class User
     {
-        public static uint ID { get; set; } = 0;
         public string Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -21,17 +20,11 @@ namespace CSharp_S01_FinalTask
             Email = tmp.Email;
             Password = tmp.Password;
             RegisterAs = tmp.RegisterAs;
-            ID++;
         }
 
         public User()
         {
 
-        }
-        public override string ToString()
-        {
-            return $"{Username} " +
-                $"{Email} ";
         }
 
         public static bool IsEmail(string mail)
