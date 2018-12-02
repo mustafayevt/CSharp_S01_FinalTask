@@ -153,17 +153,18 @@ Phone Number - {wAnnouncement.pNumber}");
         public decimal MinSalarey { get; set; }
         public string pNumber { get; set; }
         public void Show()
-        {
-            Console.WriteLine(Name);
-            Console.WriteLine(Surname);
-            Console.WriteLine($"{Age}");
-            Console.WriteLine(Category.ToString());
-            Console.WriteLine(City.ToString());
-            Console.WriteLine(Sex.ToString());
-            Console.WriteLine(Education.ToString());
-            Console.WriteLine(Experience.ToString());
-            Console.WriteLine(MinSalarey);
-            Console.WriteLine(pNumber);
+        { 
+            Console.WriteLine($@"
+Name           - {Name}
+Surname        - {Surname}
+Age            - {Age}
+Category       - {Category.ToString()}
+City           - {City.ToString()}
+Sex            - {Sex.ToString()}
+Education      - {Education.ToString()}
+Experience     - {Experience.ToString()}
+Minimum Salary - {MinSalarey}
+Phone Number   - {pNumber}");
 
         }
     }

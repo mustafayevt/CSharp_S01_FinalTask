@@ -24,6 +24,7 @@ namespace CSharp_S01_FinalTask
             }
             List<Employer> employers = new List<Employer>();
             List<Worker> workers = new List<Worker>();
+            //FILE SYSTEM
             if (File.Exists("Employers.json") && File.Exists("Workers.json"))
             {
                 string jsonEmployers = File.ReadAllText("Employers.json");
@@ -55,7 +56,7 @@ namespace CSharp_S01_FinalTask
                     }
                 }
             }
-            //Console.WriteLine(workers[0].Username);
+            /////////////////
             int LoggedAs = 0;
             int Logged = 0;
         MainPoint:
@@ -149,7 +150,6 @@ namespace CSharp_S01_FinalTask
                             LoggedAs = 2;
                         }
                         Console.WriteLine("Sign Up is Successful");
-                        Console.ReadKey();
                         if (LoggedAs == 1)
                         {
 

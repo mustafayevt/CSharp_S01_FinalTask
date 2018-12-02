@@ -147,17 +147,16 @@ namespace CSharp_S01_FinalTask
         public string pNumber { get; set; }
         public void Show()
         {
-            Console.WriteLine(AnnouncementName);
-                Console.WriteLine(CompanyName);
-                Console.WriteLine($"{Age}");
-                Console.WriteLine(Category.ToString());
-                Console.WriteLine(City.ToString());
-                Console.WriteLine(Description);
-                Console.WriteLine(Education.ToString());
-                Console.WriteLine(Experience.ToString());
-                Console.WriteLine(Salary);
-                Console.WriteLine(pNumber);
-            
+            Console.WriteLine($@"
+Company Name - {CompanyName}
+Age          - {Age}
+Category     - {Category.ToString()}
+Description  - {Description}
+City         - {City.ToString()}
+Salary       - {Salary}
+Educatioin   - {Education.ToString()}
+Experience   - {Experience.ToString()}
+Phone Number - {pNumber}");
         }
     }
     
