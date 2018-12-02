@@ -21,6 +21,8 @@ namespace CSharp_S01_FinalTask
                 Thread.Sleep(40);
             }
             List<Employer> employers = new List<Employer>();
+            employers.Add(new Employer(new User()));
+            employers.Last().eAnnouncements.Add(new EmployerAnnouncement() { Education = Education.HIGER });
             List<Worker> workers = new List<Worker>();
             int LoggedAs = 0;
             int Logged = 0;
@@ -56,6 +58,24 @@ namespace CSharp_S01_FinalTask
                             Console.Beep();
                             Console.WriteLine("Caps Lock is active!");
                         }
+                        Console.WriteLine("Enter Username:");
+                        var uname = Console.ReadLine();
+                        Console.WriteLine("Enter Password:");
+                        var pass = Console.ReadLine();
+                        foreach (var item in workers)
+                        {
+                            if(item.Username==uname && item.Password == pass)
+                            {
+                                LoggedAs = 1;
+                                Logged = item.GetHashCode();
+                                if (!ShowLoggedInMenuForWorker(employers, workers, Logged))
+                                {
+                                    Logged = 0;
+                                    LoggedAs = 0;
+                                    goto MainPoint;
+                                }
+                            }
+                        }
                         break;
                     }
                 case 2:
@@ -83,7 +103,12 @@ namespace CSharp_S01_FinalTask
                         Console.WriteLine("Sign Up is Successful");
                         Console.ReadKey();
                         if (LoggedAs == 1)
-                            ShowLoggedInMenuForWorker(employers,workers, Logged);
+                            if(!ShowLoggedInMenuForWorker(employers,workers, Logged))
+                            {
+                                Logged = 0;
+                                LoggedAs = 0;
+                                goto MainPoint;
+                            }
                         //else if (LoggedAs == 2)
                             //ShowLoggedInMenuForEmployer(employers, Logged);
                         break;
@@ -129,11 +154,13 @@ namespace CSharp_S01_FinalTask
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.Write("   ");
             }
+            Console.WriteLine("\n\t<--  -->");
         }
 
-        static void ShowLoggedInMenuForWorker(List<Employer> employers, List<Worker> workers, int logged)
+        static bool ShowLoggedInMenuForWorker(List<Employer> employers, List<Worker> workers, int logged)
         {
         ReturnMain:
+            Console.ReadKey();
             string[] Choices = { "Add CV", "Find Job", "Search", "Show My Info", "Show All Jobs", "Log Out" };
             int currentChoice = 0;
             ConsoleKeyInfo info;
@@ -152,6 +179,7 @@ namespace CSharp_S01_FinalTask
                     if (currentChoice > 0) currentChoice--;
                 }
             }
+            Console.Clear();
             switch (currentChoice)
             {
                 case 0:
@@ -165,33 +193,177 @@ namespace CSharp_S01_FinalTask
                             Console.WriteLine("You Already Added CV");
                             goto ReturnMain;
                         }
-                        break;
+                        goto ReturnMain;
                     }
                 case 1:
                     {
-                        //if(workers.Find(x=>x.GetHashCode()==logged).wAnnouncement)
-                        break;
+                        foreach (var item in workers)
+                        {
+                            if (item.GetHashCode() == logged)
+                            {
+                                var tmp = employers.Where(x => x.eAnnouncements.Any(s => s.Age == item.wAnnouncement.Age || s.Category == item.wAnnouncement.Category || s.City == item.wAnnouncement.City || s.Education == item.wAnnouncement.Education || s.Experience == item.wAnnouncement.Experience || s.Salary == item.wAnnouncement.MinSalarey));
+                                foreach (var item1 in tmp)
+                                {
+                                    foreach (var item2 in item1.eAnnouncements)
+                                    {
+                                        item2.Show();
+                                    }
+                                }
+                            }
+                        }
+                        goto ReturnMain;
+                    }
+                case 2:
+                    {
+                        Console.WriteLine(@"
+Search for: 
+            Category   - 1
+            Education  - 2
+            City       - 3
+            Salary     - 4
+            Experience - 5");
+                        int choiceSearch = Convert.ToInt32(Console.ReadLine());
+                        IEnumerable<EmployerAnnouncement> tmp = null;
+                        switch (choiceSearch)
+                        {
+                            case 1:
+                                {
+                                    foreach (var item in workers)
+                                    {
+                                        if (item.GetHashCode() == logged)
+                                        {
+                                            tmp = employers.SelectMany(x => x.eAnnouncements.Where(s => s.Category == item.wAnnouncement.Category));
+                                        }
+                                    }
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    foreach (var item in workers)
+                                    {
+                                        if (item.GetHashCode() == logged)
+                                        {
+                                            tmp = employers.SelectMany(x => x.eAnnouncements.Where(s => s.Education == item.wAnnouncement.Education));
+                                        }
+                                    }
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    foreach (var item in workers)
+                                    {
+                                        if (item.GetHashCode() == logged)
+                                        {
+                                            tmp = employers.SelectMany(x => x.eAnnouncements.Where(s => s.City == item.wAnnouncement.City));
+                                        }
+                                    }
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    foreach (var item in workers)
+                                    {
+                                        if (item.GetHashCode() == logged)
+                                        {
+                                            tmp = employers.SelectMany(x => x.eAnnouncements.Where(s => s.Salary == item.wAnnouncement.MinSalarey));
+                                        }
+                                    }
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    foreach (var item in workers)
+                                    {
+                                        if (item.GetHashCode() == logged)
+                                        {
+                                            tmp = employers.SelectMany(x => x.eAnnouncements.Where(s => s.Experience == item.wAnnouncement.Experience));
+                                        }
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        if (tmp != null)
+                        {
+                            foreach (var item in tmp)
+                            {
+                                item.Show();
+                                Console.WriteLine("-------------------------------");
+                            }
+                        }
+                        else Console.WriteLine("Not Found");
+                        goto ReturnMain;
+                    }
+                case 3:
+                    {
+                        foreach (var item in workers)
+                        {
+                            if (item.GetHashCode() == logged && item.wAnnouncement!=null)
+                            {
+                                item.Show();goto ReturnMain;
+                            }
+                        }
+                        Console.WriteLine("Not Found Any CV");
+                        goto ReturnMain;
+                    }
+                case 4:
+                    {
+                    returnJobs:
+                        var tmp = employers.SelectMany(x=>x.eAnnouncements).ToList();
+                        if (tmp.Count > 0)
+                        {
+                            for (int i = 0; i < tmp.Count; i++)
+                            {
+                                Console.WriteLine($"{i + 1} - {tmp[i]}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Job Not Found");
+                            goto ReturnMain;
+                        }
+                        int select = Convert.ToInt32(Console.ReadLine());
+                        if (select > tmp.Count) goto returnJobs;
+                        tmp[select].Show();
+                        Console.WriteLine("--------------------------------");
+                        Console.WriteLine("Send CV For This Job y\n");
+                        var sendJob = Console.ReadLine();
+                        if (sendJob.ToLower() == "y")
+                        {
+                            foreach (var item in workers)
+                            {
+                                if (item.GetHashCode() == logged)
+                                {
+                                    foreach (var item2 in employers)
+                                    {
+                                        foreach (var item3 in item2.eAnnouncements)
+                                        {
+                                            if (item3.Announcment_ID == tmp[select].Announcment_ID)
+                                            {
+                                                item2.Coming.Add(item3.Announcment_ID,item.wAnnouncement.CV_ID);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        goto ReturnMain;
+                        }
+                        else goto returnJobs;
+                    }
+                case 5:
+                    {
+                        return false;
                     }
                 default:
                     break;
             }
+            return false;
         }
-        static void SearchJob(List<Employer>employers, List<Worker> workers,int logged)
+        static bool ShowLoggedInMenuForEmployer(List<Employer> employers,List<Worker> workers, int logged)
         {
-            foreach (var item in workers)
-            {
-                if (item.GetHashCode() == logged)
-                {
-                    var tmp = employers.Where(x => x.eAnnouncements.Any(s => s.Age == item.wAnnouncement.Age || s.Category == item.wAnnouncement.Category || s.City == item.wAnnouncement.City || s.Education == item.wAnnouncement.Education || s.Experience == item.wAnnouncement.Experience || s.Salary == item.wAnnouncement.MinSalarey));
-                    foreach (var item1 in tmp)
-                    {
-                        foreach (var item2 in item1.eAnnouncements)
-                        {
-                            item2.Show();
-                        }
-                    }
-                }
-            }
+
+            return false;
         }
     }
 }

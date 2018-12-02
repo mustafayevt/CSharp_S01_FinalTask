@@ -14,11 +14,13 @@ namespace CSharp_S01_FinalTask
 
         }
         public List<EmployerAnnouncement> eAnnouncements = new List<EmployerAnnouncement>();
+        public Dictionary<uint, uint> Coming = new Dictionary<uint, uint>();
 
-        
     }
     class EmployerAnnouncement
     {
+        public static uint id = 0; 
+        public uint Announcment_ID { get; set; }
         public string AnnouncementName { get; set; }
         public string CompanyName { get; set; }
         public Category Category { get; set; }
@@ -29,7 +31,6 @@ namespace CSharp_S01_FinalTask
         public Education Education { get; set; }
         public Experience Experience { get; set; }
         public string pNumber { get; set; }
-
         public void Show()
         {
             Console.WriteLine(AnnouncementName);

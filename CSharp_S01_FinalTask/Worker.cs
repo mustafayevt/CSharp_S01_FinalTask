@@ -14,9 +14,25 @@ namespace CSharp_S01_FinalTask
 
         }
         public WorkerAnnouncement wAnnouncement = null;
+
+        public void Show()
+        {
+            Console.WriteLine($@"
+Name         - {wAnnouncement.Name}
+Surname      - {wAnnouncement.Surname}
+Age          - {wAnnouncement.Age}
+Education    - {wAnnouncement.Education.ToString()}
+Experience   - {wAnnouncement.Experience.ToString()}
+Category     - {wAnnouncement.Category.ToString()}
+Min Salarey  - {wAnnouncement.MinSalarey}
+Phone Number - {wAnnouncement.pNumber}");
+        }
+
         public static WorkerAnnouncement AddCV()
         {
             WorkerAnnouncement newAnnouncement = new WorkerAnnouncement();
+            WorkerAnnouncement.id++;
+            newAnnouncement.CV_ID = WorkerAnnouncement.id;
             Console.WriteLine("Enter Name");
             newAnnouncement.Name = Console.ReadLine();
             Console.WriteLine("Enter Surname");
@@ -120,6 +136,8 @@ namespace CSharp_S01_FinalTask
     }
     class WorkerAnnouncement
     {
+        public static uint id = 0;
+        public uint CV_ID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public Sex Sex { get; set; }
