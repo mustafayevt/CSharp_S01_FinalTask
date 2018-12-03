@@ -150,7 +150,7 @@ Phone Number - {wAnnouncement.pNumber}");
         public Experience Experience { get; set; }
         public City City { get; set; }
         public Category Category { get; set; }
-        public decimal MinSalarey { get; set; }
+        public int MinSalarey { get; set; }
         public string pNumber { get; set; }
         public void Show()
         { 

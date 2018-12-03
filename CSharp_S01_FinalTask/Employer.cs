@@ -140,7 +140,7 @@ namespace CSharp_S01_FinalTask
         public Category Category { get; set; }
         public string Description { get; set; }
         public City City { get; set; }
-        public decimal Salary { get; set; }
+        public int Salary { get; set; }
         public int Age { get; set; }
         public Education Education { get; set; }
         public Experience Experience { get; set; }
