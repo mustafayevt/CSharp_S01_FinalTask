@@ -181,7 +181,10 @@ namespace CSharp_S01_FinalTask
                         string jsonWorker = JsonConvert.SerializeObject(workers);
 
                         System.IO.File.WriteAllText("Workers.json", jsonWorker);
-                        AnimatedTitle("Bye Bye");
+                        AnimatedTitleThread.Abort();
+                        Thread thread = new Thread(AnimatedTitle);
+                        thread.Start("Bye Bye");
+                        while (thread.IsAlive){}
                         Environment.Exit(0);
                         break;
                     }
@@ -430,7 +433,16 @@ Search for:
                                         {
                                             if (item3.Announcment_ID == tmp[select].Announcment_ID)
                                             {
-                                                item2.Coming.Add(new Dictionary<uint, uint>() { { item3.Announcment_ID, item.wAnnouncement.CV_ID } });
+                                                if (item2.Coming.Keys.Contains(item3.Announcment_ID))
+                                                {
+                                                    if(!item2.Coming[item3.Announcment_ID].Contains(item.wAnnouncement.CV_ID))
+                                                    item2.Coming[item3.Announcment_ID].Add(item.wAnnouncement.CV_ID);
+                                                }
+                                                else
+                                                {
+                                                    item2.Coming.Add(item3.Announcment_ID, new List<uint>() { item.wAnnouncement.CV_ID });
+                                                }
+                                                //item2.Coming.Add(new Dictionary<uint, uint>() { { item3.Announcment_ID, item.wAnnouncement.CV_ID } });
                                             }
                                         }
                                     }
@@ -454,7 +466,7 @@ Search for:
         {
         ReturnMain:
             //Console.ReadKey();
-            string[] Choices = { "Add CV", "Work Applications", "Log Out" };
+            string[] Choices = { "Add Announcement", "Work Applications", "Log Out" };
             int currentChoice = 0;
             ConsoleKeyInfo info;
             while (true)
@@ -482,34 +494,35 @@ Search for:
                 case 1:
                     {
                         bool checkExist = false;
-                        foreach (var item in employers.Find(x => x.GetHashCode() == logged).Coming)
+                        foreach (var key in employers.Find(x => x.GetHashCode() == logged).Coming)
                         {
-                            foreach (var key in item)
+                            foreach (var item in employers)
                             {
-                                foreach (var item2 in employers.Find(x => x.GetHashCode() == logged).eAnnouncements)
+                                foreach (var item2 in item.eAnnouncements)
                                 {
                                     if (key.Key == item2.Announcment_ID)
                                     {
-                                        var tmp = workers.Find(s => s.wAnnouncement.CV_ID == key.Value).wAnnouncement;
-                                        Console.WriteLine("-----------------------------");
-                                        Console.WriteLine($@"Announcement:");
-                                        item2.Show();
-                                        //Console.WriteLine("-----------------------------");
-                                        Console.BackgroundColor = ConsoleColor.DarkRed;
-                                        Console.WriteLine("\nWorker:\n");
-                                        Console.BackgroundColor = ConsoleColor.Black;
-                                        tmp.Show();
-                                        Console.WriteLine("-----------------------------");
                                         checkExist = true;
+                                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                                        Console.WriteLine("ANNOUNCEMENT");
+                                        Console.BackgroundColor = ConsoleColor.Black;
+                                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                                        item2.Show();
+                                        Console.BackgroundColor = ConsoleColor.Black;
+                                        foreach (var list in key.Value)
+                                        {
+                                            Console.WriteLine("-------------------------------------");
+                                            workers.Find(x => x.wAnnouncement.CV_ID == list).Show();
+                                        }
                                     }
                                 }
                             }
                         }
                         if (!checkExist)
                         {
-                            Console.WriteLine("Empty");
-                            Console.ReadKey();
+                            Console.WriteLine("Empty!");
                         }
+                        Console.ReadKey();
                         goto ReturnMain;
                     }
                 case 2:

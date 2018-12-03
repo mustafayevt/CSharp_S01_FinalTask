@@ -17,12 +17,17 @@ namespace CSharp_S01_FinalTask
         {
 
         }
+
+        public Dictionary<uint, List<uint>> Coming = new Dictionary<uint, List<uint>>();        
+
+
         public List<EmployerAnnouncement> eAnnouncements = new List<EmployerAnnouncement>();
-        public List<Dictionary<uint, uint>> Coming = new List<Dictionary<uint, uint>>();
         //key = Employer announcement
-        //value = Worker cv
+        //value = Worker cv (List<uint>)
         public static EmployerAnnouncement addAnnouncement()
         {
+            
+
             EmployerAnnouncement newAnnouncement = new EmployerAnnouncement();
             EmployerAnnouncement.id++;
             newAnnouncement.Announcment_ID = EmployerAnnouncement.id;
@@ -85,7 +90,7 @@ namespace CSharp_S01_FinalTask
             newAnnouncement.Age = age;
 
         EducationPoint:
-            Console.WriteLine("Enter Your Education");
+            Console.WriteLine("Enter Education");
             Console.WriteLine($"{Education.MIDDLE.ToString()} - 1");
             Console.WriteLine($"{Education.INCOMPELETEHIGHER.ToString()} - 2");
             Console.WriteLine($"{Education.HIGER.ToString()} - 3");
@@ -102,7 +107,7 @@ namespace CSharp_S01_FinalTask
             newAnnouncement.Education = (Education)edu;
 
         ExperiencePoint:
-            Console.WriteLine("Enter Your Experience");
+            Console.WriteLine("Enter Experience");
             Console.WriteLine($"Less Then yead - 1");
             Console.WriteLine($"One Year to Three Year - 2");
             Console.WriteLine($"Three Year to Five Year - 3");
