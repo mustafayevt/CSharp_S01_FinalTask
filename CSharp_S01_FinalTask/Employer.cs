@@ -17,17 +17,12 @@ namespace CSharp_S01_FinalTask
         {
 
         }
-
         public Dictionary<uint, List<uint>> Coming = new Dictionary<uint, List<uint>>();        
-
-
         public List<EmployerAnnouncement> eAnnouncements = new List<EmployerAnnouncement>();
         //key = Employer announcement
         //value = Worker cv (List<uint>)
         public static EmployerAnnouncement addAnnouncement()
         {
-            
-
             EmployerAnnouncement newAnnouncement = new EmployerAnnouncement();
             EmployerAnnouncement.id++;
             newAnnouncement.Announcment_ID = EmployerAnnouncement.id;
