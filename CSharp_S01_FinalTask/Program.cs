@@ -237,7 +237,7 @@ namespace CSharp_S01_FinalTask
         static bool ShowLoggedInMenuForWorker(List<Employer> employers, List<Worker> workers, int logged)
         {
         ReturnMain:
-            Console.ReadKey();
+            //Console.ReadKey();
             string[] Choices = { "Add CV", "Find Job", "Search", "Show My Info", "Show All Jobs", "Log Out" };
             int currentChoice = 0;
             ConsoleKeyInfo info;
@@ -455,7 +455,7 @@ Search for:
         static bool ShowLoggedInMenuForEmployer(List<Employer> employers, List<Worker> workers, int logged)
         {
         ReturnMain:
-            Console.ReadKey();
+            //Console.ReadKey();
             string[] Choices = { "Add CV", "Work Applications", "Log Out" };
             int currentChoice = 0;
             ConsoleKeyInfo info;
