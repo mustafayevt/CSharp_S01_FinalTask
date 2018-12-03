@@ -223,13 +223,11 @@ namespace CSharp_S01_FinalTask
             }
             Console.WriteLine("\n\t<--  -->");
         }
-
         static void ShowWindow()
         {
             for (int i = 1; i < 30; i++)
             {
                 Console.SetWindowSize(i + 80, i);
-
                 Thread.Sleep(90);
             }
         }
