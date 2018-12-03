@@ -16,12 +16,12 @@ namespace CSharp_S01_FinalTask
         {
             //Loading Program
             Console.CursorVisible = false;
-            for (int i = 1; i < 30; i++)
-            {
-                Console.SetWindowSize(i + 80, i);
+            Thread AnimatedTitleThread = new Thread(AnimatedTitle);
+            AnimatedTitleThread.Start("Main Page");
 
-                Thread.Sleep(40);
-            }
+            Thread ShowWindowThread = new Thread(ShowWindow);
+            ShowWindowThread.Start();
+
             List<Employer> employers = new List<Employer>();
             List<Worker> workers = new List<Worker>();
             //FILE SYSTEM
@@ -60,7 +60,6 @@ namespace CSharp_S01_FinalTask
             int LoggedAs = 0;
             int Logged = 0;
         MainPoint:
-            AnimatedTitle("Main Page");
             Console.ForegroundColor = ConsoleColor.Cyan;
             int MainChoice = 0;
             string[] choices = { "Exit", "Sign In", "Sign Up" };
@@ -85,7 +84,9 @@ namespace CSharp_S01_FinalTask
             {
                 case 1:
                     {
-                        AnimatedTitle("Sign In Page");
+                        AnimatedTitleThread.Abort();
+                        Thread thread = new Thread(AnimatedTitle);
+                        thread.Start("Sign In Page");
                         if (Console.CapsLock)
                         {
                             Console.Beep();
@@ -129,13 +130,14 @@ namespace CSharp_S01_FinalTask
                     }
                 case 2:
                     {
-                        AnimatedTitle("Sign Up Page");
+                        AnimatedTitleThread.Abort();
+                        Thread thread = new Thread(AnimatedTitle);
+                        thread.Start("Sign Up Page");
                         if (Console.CapsLock)
                         {
                             Console.Beep();
                             Console.WriteLine("Caps Lock is active!");
                         }
-                        Console.Clear();
                         User tmp = User.Register(employers, workers);
                         if (tmp.RegisterAs == RegisterAs.WORKER)
                         {
@@ -193,14 +195,15 @@ namespace CSharp_S01_FinalTask
         }
 
 
-        static void AnimatedTitle(string Progresbar)
+        static void AnimatedTitle(object ProgresbarTmp)
         {
+            string Progresbar = ProgresbarTmp as string;
             var title = "";
             for (int i = 0; i < Progresbar.Length; i++)
             {
                 title += Progresbar[i];
                 Console.Title = title;
-                Thread.Sleep(100);
+                Thread.Sleep(400);
             }
 
         }
@@ -219,6 +222,16 @@ namespace CSharp_S01_FinalTask
                 Console.Write("   ");
             }
             Console.WriteLine("\n\t<--  -->");
+        }
+
+        static void ShowWindow()
+        {
+            for (int i = 1; i < 30; i++)
+            {
+                Console.SetWindowSize(i + 80, i);
+
+                Thread.Sleep(90);
+            }
         }
 
         static bool ShowLoggedInMenuForWorker(List<Employer> employers, List<Worker> workers, int logged)
