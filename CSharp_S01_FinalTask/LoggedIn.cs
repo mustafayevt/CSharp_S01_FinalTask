@@ -137,9 +137,9 @@ Search for:
                                     break;
                                 }
                             default:
-                                break;
+                                goto ReturnMain;
                         }
-                        if (tmp != null)
+                        if (tmp.Count()>0)
                         {
                             foreach (var item in tmp)
                             {
@@ -193,38 +193,50 @@ Search for:
                         var sendJob = Console.ReadLine();
                         if (sendJob.ToLower() == "y")
                         {
-                            var cvID = workers.Find(x => x.GetHashCode() == logged).wAnnouncement.CV_ID;
-                            uint eCvID = 0;
-                            foreach (var item in employers)
+                            if (workers.Find(x => x.GetHashCode() == logged).wAnnouncement != null)
                             {
-                                eCvID = item.eAnnouncements.Find(x => x.Announcment_ID == tmp[select].Announcment_ID).Announcment_ID;
-                            }
-                            foreach (var item in workers)
-                            {
-                                if (item.GetHashCode() == logged)
+                                var cvID = workers.Find(x => x.GetHashCode() == logged).wAnnouncement.CV_ID;
+                                uint eCvID = 0;
+                                foreach (var item in employers)
                                 {
-                                    foreach (var item2 in employers)
+                                    eCvID = item.eAnnouncements.Find(x => x.Announcment_ID == tmp[select].Announcment_ID).Announcment_ID;
+                                }
+                                foreach (var item in workers)
+                                {
+                                    if (item.GetHashCode() == logged)
                                     {
-                                        foreach (var item3 in item2.eAnnouncements)
+                                        foreach (var item2 in employers)
                                         {
-                                            if (item3.Announcment_ID == tmp[select].Announcment_ID)
+                                            foreach (var item3 in item2.eAnnouncements)
                                             {
-                                                if (item2.Coming.Keys.Contains(item3.Announcment_ID))
+                                                if (item3.Announcment_ID == tmp[select].Announcment_ID)
                                                 {
-                                                    if (!item2.Coming[item3.Announcment_ID].Contains(item.wAnnouncement.CV_ID))
-                                                        item2.Coming[item3.Announcment_ID].Add(item.wAnnouncement.CV_ID);
+                                                    if (item2.Coming.Keys.Contains(item3.Announcment_ID))
+                                                    {
+                                                        if (!item2.Coming[item3.Announcment_ID].Contains(item.wAnnouncement.CV_ID))
+                                                        {
+                                                            item2.Coming[item3.Announcment_ID].Add(item.wAnnouncement.CV_ID);
+                                                            Console.WriteLine("Sended!");
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("You Already Send Your CV For This Job!");
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        item2.Coming.Add(item3.Announcment_ID, new List<uint>() { item.wAnnouncement.CV_ID });
+                                                    }
                                                 }
-                                                else
-                                                {
-                                                    item2.Coming.Add(item3.Announcment_ID, new List<uint>() { item.wAnnouncement.CV_ID });
-                                                }
-                                                //item2.Coming.Add(new Dictionary<uint, uint>() { { item3.Announcment_ID, item.wAnnouncement.CV_ID } });
                                             }
                                         }
                                     }
                                 }
                             }
-                            Console.WriteLine("Sended!");
+                            else
+                            {
+                                Console.WriteLine("You Have To Add CV First!");
+                            }
                             goto ReturnMain;
                         }
                         else goto returnJobs;
