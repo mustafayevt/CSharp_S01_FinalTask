@@ -44,6 +44,7 @@ namespace CSharp_S01_FinalTask
                         else
                         {
                             Console.WriteLine("You Already Added CV");
+                            Program.logger.Warn($"User - {workers.Find(x => x.GetHashCode() == logged).Username} tried create CV again");
                             goto ReturnMain;
                         }
                         goto ReturnMain;
@@ -185,6 +186,7 @@ Search for:
                         if (select >= tmp.Count)
                         {
                             Console.WriteLine("Out of Range");
+                            Program.logger.Warn($"User - {workers.Find(x => x.GetHashCode() == logged).Username} tried to select unnown job");
                             goto returnJobs;
                         }
                         tmp[select].Show();
@@ -314,6 +316,7 @@ Search for:
                         }
                         if (!checkExist)
                         {
+                            Program.logger.Info($"User - {employers.Find(x=>x.GetHashCode()==logged).Username} has not have any job applications");
                             Console.WriteLine("Empty!");
                         }
                         goto ReturnMain;

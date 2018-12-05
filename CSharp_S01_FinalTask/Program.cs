@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using NLog;
+using NLog.Fluent;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,9 +14,12 @@ namespace CSharp_S01_FinalTask
 {
     class Program
     {
+        public static Logger logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
             //Loading Program
+
+
             Console.CursorVisible = false;
             Thread AnimatedTitleThread = new Thread(AnimatedTitle);
             AnimatedTitleThread.Start("Main Page");
@@ -100,6 +105,7 @@ namespace CSharp_S01_FinalTask
                         {
                             if (item.Username == uname && item.Password == pass)
                             {
+                                logger.Info($"User - {item.Username} is logged in system");
                                 LoggedAs = 1;
                                 Logged = item.GetHashCode();
                                 if (!LoggedIn.ShowLoggedInMenuForWorker(employers, workers, Logged))
@@ -114,6 +120,7 @@ namespace CSharp_S01_FinalTask
                         {
                             if (item.Username == uname && item.Password == pass)
                             {
+                                logger.Info($"User - {item.Username} is logged in system");
                                 LoggedAs = 2;
                                 Logged = item.GetHashCode();
                                 if (!LoggedIn.ShowLoggedInMenuForEmployer(employers, workers, Logged))
@@ -144,12 +151,14 @@ namespace CSharp_S01_FinalTask
                             workers.Add(new Worker(tmp));
                             Logged = workers.Last().GetHashCode();
                             LoggedAs = 1;
+                            logger.Info($"User - {workers.Last().Username} registered successfully");
                         }
                         else
                         {
                             employers.Add(new Employer(tmp));
                             Logged = employers.Last().GetHashCode();
                             LoggedAs = 2;
+                            logger.Info($"User - {employers.Last().Username} registered successfully");
                         }
                         Console.WriteLine("Sign Up is Successful");
                         if (LoggedAs == 1)

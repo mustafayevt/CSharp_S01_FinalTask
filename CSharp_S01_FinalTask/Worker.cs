@@ -132,6 +132,7 @@ Phone Number - {wAnnouncement.pNumber}");
             if (!IsNumber(num))
             {
                 Console.WriteLine("Phone Format is Wrong, Enter Again");
+                Program.logger.Warn($"{num} - This phone number format is wrong");
                 goto pNumberPoint;
             }
             newAnnouncement.pNumber = num;

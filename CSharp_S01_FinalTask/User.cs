@@ -54,6 +54,7 @@ namespace CSharp_S01_FinalTask
             if (CheckUsername(newUser.Username, employers, workers))
             {
                 Console.WriteLine("This Username Already Taken");
+                Program.logger.Warn($"{newUser.Username} - This username is already exist");
                 goto UsernamePoint;
             }
         EmailPoint:
@@ -62,11 +63,13 @@ namespace CSharp_S01_FinalTask
             if (!User.IsEmail(newUser.Email))
             {
                 Console.WriteLine("Email Is Invalid!");
+                Program.logger.Warn($"{newUser.Email} - This email format is invalid");
                 goto EmailPoint;
             }
             if (CheckEmail(newUser.Email, employers, workers))
             {
                 Console.WriteLine("This Email Used by Another User");
+                Program.logger.Warn($"{newUser.Email} - This email is already exist");
                 goto EmailPoint;
             }
         ChoicePoint:
@@ -84,12 +87,14 @@ namespace CSharp_S01_FinalTask
             if (!User.IsPassword(newUser.Password))
             {
                 Console.WriteLine("Password Is Invalid!");
+                Program.logger.Warn($"{newUser.Password} - This password format if invalid");
                 goto PasswordPoint;
             }
             Console.WriteLine("Enter Password Again");
             if (Console.ReadLine() != newUser.Password)
             {
                 Console.WriteLine("Wrong Password");
+                Program.logger.Warn($"{newUser.Password} - This password is wrong");
                 goto PasswordPoint;
             }
         CAPTCHAPoint:
@@ -98,6 +103,7 @@ namespace CSharp_S01_FinalTask
             if (CAPTCHA != Console.ReadLine())
             {
                 Console.WriteLine("Wrong CAPTCHA");
+                Program.logger.Warn("Wrong CAPTCHA");
                 goto CAPTCHAPoint;
             }
             return newUser;
