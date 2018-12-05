@@ -318,6 +318,7 @@ Search for:
                         {
                             Program.logger.Info($"User - {employers.Find(x=>x.GetHashCode()==logged).Username} has not have any job applications");
                             Console.WriteLine("Empty!");
+
                         }
                         goto ReturnMain;
                     }
